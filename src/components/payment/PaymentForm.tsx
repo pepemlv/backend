@@ -1,3 +1,5 @@
+//src/components/payment/PaymentForm
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Movie } from '../../store/moviesStore';
@@ -45,7 +47,7 @@ export default function PaymentForm({ movie, onSubmit }: PaymentFormProps) {
 
         setStatusMessage(`⏳ En attente de confirmation sur le téléphone... (${countdown}s)`);
 
-        const res = await axios.post("https://pmsstreaming.com/api/kelpay-pay", {
+        const res = await axios.post("https://pms-backend-m1qi.onrender.com/api/kelpay-pay", {
           mobilenumber: mobileNumber,
           amount: movie.price,
         });
@@ -69,7 +71,8 @@ export default function PaymentForm({ movie, onSubmit }: PaymentFormProps) {
 
         const poll = setInterval(async () => {
           try {
-            const statusRes = await axios.get(`https://pmsstreaming.com/api/kelpay-status/${reference}`);
+          const statusRes = await axios.get(`https://pms-backend-m1qi.onrender.com/api/kelpay-status/${reference}`);
+
             const statusData = statusRes.data;
 
             if (statusData.status === "CONFIRMED") {
@@ -126,7 +129,8 @@ export default function PaymentForm({ movie, onSubmit }: PaymentFormProps) {
         if (stripeError) throw new Error(stripeError.message);
         const { id } = paymentMethod;
 
-        const response = await axios.post('https://pmsstreaming.com/payment', {
+      const response = await axios.post('https://pms-backend-m1qi.onrender.com/payment', {
+
           amount: movie.price * 100,
           id,
           title: movie.title,

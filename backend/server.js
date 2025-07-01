@@ -10,22 +10,34 @@ const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_TEST);
 const PORT = process.env.PORT || 4000;
 
-// CORS : autoriser uniquement ton domaine en production
+// ✅ CORS: allow your domain + handle preflight
 app.use(cors({
   origin: 'https://pmsstreaming.com',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
+app.options('*', cors()); // ✅ Allow preflight for all routes
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// In-memory store pour suivre le statut Kelpay
+// In-memory store for Kelpay payment statuses
 const paymentStatus = {};
 
-// --- STRIPE ---
+// --- Health Check Route ---
+app.get('/', (req, res) => {
+  res.send('Backend is running ✅');
+});
+
+// --- Stripe Payment Route ---
 app.post('/payment', async (req, res) => {
   const { amount, id } = req.body;
+
+  if (!amount || !id) {
+    return res.status(400).json({ success: false, message: 'Missing required fields' });
+  }
+
   try {
     const payment = await stripe.paymentIntents.create({
       amount,
@@ -34,21 +46,26 @@ app.post('/payment', async (req, res) => {
       payment_method: id,
       confirm: true,
     });
-    res.json({ success: true, message: 'Payment successful' });
+
+    res.status(200).json({ success: true, message: 'Payment successful' });
   } catch (error) {
     console.error('Stripe error:', error.message);
-    res.json({ success: false, message: 'Payment failed' });
+    res.status(500).json({ success: false, message: 'Payment failed' });
   }
 });
 
-// --- KELPAY : initier paiement Mobile Money ---
+// --- Kelpay: Initiate Mobile Money Payment ---
 app.post('/api/kelpay-pay', async (req, res) => {
   const { mobilenumber, amount } = req.body;
   const reference = 'REF' + Date.now();
 
+  if (!mobilenumber || !amount) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
   try {
     const response = await axios.post(
-      "https://pay.keccel.com/kelpay/v1/payment.asp",
+      process.env.KELPAY_URL,
       {
         merchantcode: process.env.MERCHANT_CODE,
         mobilenumber,
@@ -56,7 +73,7 @@ app.post('/api/kelpay-pay', async (req, res) => {
         amount,
         currency: "USD",
         description: "Payment via KELPAY",
-        callbackurl: process.env.CALLBACK_URL, // https://pmsstreaming.com/kelpay-callback
+        callbackurl: `${process.env.CALLBACK_URL}/kelpay-callback`,
       },
       {
         headers: {
@@ -68,32 +85,39 @@ app.post('/api/kelpay-pay', async (req, res) => {
 
     const transactionid = response.data.transactionid;
     paymentStatus[reference] = { ...response.data, transactionid };
-    res.json({ request: response.data, reference, transactionid });
+
+    res.status(200).json({ request: response.data, reference, transactionid });
   } catch (error) {
     console.error("Kelpay error:", error.message);
     res.status(500).json({ error: "Kelpay request failed" });
   }
 });
 
-// --- KELPAY callback (webhook) ---
+// --- Kelpay Webhook Callback ---
 app.post('/kelpay-callback', (req, res) => {
   const result = req.body;
-  console.log("KELPAY callback received:", result);
-  paymentStatus[result.reference] = result;
+  console.log("Kelpay callback received:", result);
+
+  if (result?.reference) {
+    paymentStatus[result.reference] = result;
+  }
+
   res.status(200).send("OK");
 });
 
-// --- Vérifier le statut d'un paiement Mobile Money ---
+// --- Check Kelpay Payment Status ---
 app.get('/api/kelpay-status/:reference', (req, res) => {
   const reference = req.params.reference;
   const result = paymentStatus[reference];
+
   if (result) {
-    res.json(result);
+    res.status(200).json(result);
   } else {
-    res.json({ status: 'PENDING' });
+    res.status(200).json({ status: 'PENDING' });
   }
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`✅ Server is running on port ${PORT}`);
 });
