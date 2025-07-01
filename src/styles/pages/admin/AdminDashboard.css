@@ -1,0 +1,23 @@
+.admin-layout {
+  @apply min-h-screen bg-background;
+}
+
+.admin-sidebar {
+  @apply w-64 bg-card border-r border-border h-screen fixed left-0 top-0;
+}
+
+.admin-content {
+  @apply ml-64;
+}
+
+.sidebar-link {
+  @apply flex items-center gap-3 px-6 py-3 text-muted-foreground hover:text-primary hover:bg-primary/10;
+}
+
+.stats-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6 mb-8;
+}
+
+.stat-card {
+  @apply bg-card p-6 rounded-lg;
+}

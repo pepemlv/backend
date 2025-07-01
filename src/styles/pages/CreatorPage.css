@@ -1,0 +1,31 @@
+.creator-hero {
+  @apply relative;
+}
+
+.creator-hero-overlay {
+  @apply absolute inset-0;
+}
+
+.creator-hero-gradient {
+  @apply h-full w-full bg-gradient-to-b from-background/50 to-background;
+}
+
+.creator-profile {
+  @apply flex flex-col md:flex-row gap-8 items-start;
+}
+
+.creator-avatar {
+  @apply w-48 h-48 rounded-full overflow-hidden shrink-0;
+}
+
+.creator-social-buttons {
+  @apply flex flex-wrap gap-4;
+}
+
+.creator-content {
+  @apply container py-12;
+}
+
+.creator-store {
+  @apply bg-card rounded-lg p-6;
+}

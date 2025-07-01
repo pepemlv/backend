@@ -1,0 +1,11 @@
+.movie-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6;
+}
+
+.movie-skeleton {
+  @apply bg-secondary animate-pulse rounded-lg aspect-[2/3];
+}
+
+.empty-state {
+  @apply flex flex-col items-center justify-center py-16 text-center;
+}

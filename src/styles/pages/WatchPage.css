@@ -1,0 +1,15 @@
+.watch-container {
+  @apply container py-4 md:py-8;
+}
+
+.video-info {
+  @apply mt-6;
+}
+
+.video-meta {
+  @apply flex flex-wrap gap-4 mb-4;
+}
+
+.video-badge {
+  @apply inline-flex items-center gap-1 text-sm bg-secondary px-3 py-1 rounded-full;
+}

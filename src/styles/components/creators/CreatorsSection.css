@@ -1,0 +1,11 @@
+.creators-section {
+  @apply py-16;
+}
+
+.creators-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
+}
+
+.empty-creators {
+  @apply text-center py-12;
+}

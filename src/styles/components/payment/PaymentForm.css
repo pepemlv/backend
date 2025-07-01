@@ -1,0 +1,23 @@
+.payment-success {
+  @apply text-center py-10;
+}
+
+.payment-method-button {
+  @apply flex-1 px-4 py-3 flex items-center justify-center gap-2;
+}
+
+.payment-method-active {
+  @apply bg-primary text-primary-foreground;
+}
+
+.payment-method-inactive {
+  @apply bg-secondary;
+}
+
+.payment-operators {
+  @apply flex gap-3;
+}
+
+.operator-badge {
+  @apply bg-muted p-2 rounded;
+}

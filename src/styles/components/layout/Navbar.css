@@ -1,0 +1,23 @@
+.navbar {
+  @apply fixed top-0 left-0 right-0 z-50 transition-all duration-300;
+}
+
+.navbar-scrolled {
+  @apply bg-background/95 backdrop-blur-sm shadow-md;
+}
+
+.navbar-transparent {
+  @apply bg-gradient-to-b from-background/80 to-transparent;
+}
+
+.nav-link {
+  @apply flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary;
+}
+
+.nav-link-active {
+  @apply text-primary;
+}
+
+.mobile-menu {
+  @apply md:hidden mt-4 py-4 bg-card rounded-lg shadow-lg fadeIn;
+}

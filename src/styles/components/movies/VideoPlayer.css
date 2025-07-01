@@ -1,0 +1,11 @@
+.video-container {
+  @apply aspect-video w-full bg-black;
+}
+
+.video-iframe {
+  @apply w-full h-full;
+}
+
+.video-element {
+  @apply w-full h-full;
+}

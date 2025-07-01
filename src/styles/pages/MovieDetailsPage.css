@@ -1,0 +1,27 @@
+.movie-details {
+  @apply relative;
+}
+
+.movie-backdrop {
+  @apply absolute inset-0;
+}
+
+.movie-backdrop-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/50;
+}
+
+.movie-info {
+  @apply relative pt-16 pb-20;
+}
+
+.movie-poster {
+  @apply aspect-[2/3] rounded-lg overflow-hidden shadow-xl;
+}
+
+.movie-meta {
+  @apply flex flex-wrap gap-4 mb-6;
+}
+
+.movie-badge {
+  @apply inline-flex items-center gap-1 text-sm bg-secondary px-3 py-1 rounded-full;
+}

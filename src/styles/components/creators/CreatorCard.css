@@ -1,0 +1,15 @@
+.creator-card {
+  @apply group relative;
+}
+
+.creator-image {
+  @apply aspect-square rounded-xl overflow-hidden mb-4;
+}
+
+.creator-image img {
+  @apply w-full h-full object-cover transition-transform duration-500 group-hover:scale-110;
+}
+
+.creator-social-link {
+  @apply text-muted-foreground hover:text-primary transition-colors;
+}

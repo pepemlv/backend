@@ -1,0 +1,23 @@
+.hero-section {
+  @apply relative;
+}
+
+.hero-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/20;
+}
+
+.hero-content {
+  @apply relative min-h-[70vh] flex items-center;
+}
+
+.hero-empty {
+  @apply min-h-[70vh] flex items-center justify-center bg-gradient-to-b from-background/50 to-background;
+}
+
+.section-title {
+  @apply text-3xl font-bold mb-4;
+}
+
+.section-subtitle {
+  @apply text-muted-foreground;
+}

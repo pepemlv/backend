@@ -1,0 +1,379 @@
+.feat {
+  padding: 3rem 0;
+}
+
+.feat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.feat-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feat-sub {
+  color: hsl(var(--mut-fg));
+}
+
+.feat-link {
+  color: hsl(var(--pri));
+}
+
+.feat-link:hover {
+  text-decoration: underline;
+}
+
+.feat-wrap {
+  position: relative;
+}
+
+.feat-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+ background-color: #0e011d;
+}
+
+.feat-item {
+  flex: none;
+  width: 300px;
+  transition: transform 0.3s;
+  
+}
+
+.feat-item:hover {
+  transform: scale(1.03);
+}
+
+.feat-thumb {
+  position: relative;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  border-radius: var(--rad);
+  cursor: pointer;
+}
+
+.feat-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit:cover;
+  transition: transform 0.5s;
+}
+
+.feat-item:hover .feat-thumb img {
+  transform: scale(1.1);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
+.feat-item:hover .overlay {
+  opacity: 1;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+}
+
+.bg-red { 
+  background-color: #ef4444;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.bg-green { background-color: #22c55e; }
+.bg-dark { background-color: rgba(0,0,0,0.8); }
+
+.feat-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  padding: 0.5rem;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+.feat-nav:hover {
+  background: rgba(0,0,0,0.7);
+}
+
+.feat-prev {
+  left: 0;
+  border-radius: 0 var(--rad) var(--rad) 0;
+}
+
+.feat-next {
+  right: 0;
+  border-radius: var(--rad) 0 0 var(--rad);
+}
+
+.feat-info {
+  padding: 1rem;
+}
+
+.feat-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feat-cat {
+  color: hsl(var(--mut-fg));
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.feat-stats {
+  display: flex;
+  justify-content: space-between;
+  color: hsl(var(--mut-fg));
+  font-size: 0.875rem;
+}
+
+.feat-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.bg-sec {
+  background: hsl(var(--sec));
+  margin-top: 3rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 90vw;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.live-card {
+  position: relative;
+  border-radius: var(--rad);
+  overflow: hidden;
+  background: hsl(var(--card));
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.live-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.live-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.live-info {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.live-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.live-desc {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.live-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.live-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+}
+
+.live-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 1rem;
+}
+
+.live-card:hover .live-thumb img {
+  transform: scale(1.1);
+}
+
+.live-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: #ef4444;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: pulse 2s infinite;
+}
+
+.live-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--rad);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.live-btn:hover {
+  opacity: 0.9;
+}
+
+.live-btn-primary {
+  background: hsl(var(--pri));
+  color: white;
+}
+
+.live-btn-secondary {
+  background: hsl(var(--sec));
+  color: white;
+}
+
+.live-now-banner {
+  background: linear-gradient(to right, hsl(var(--background)), hsl(var(--primary)/0.1));
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.live-now-content {
+  background: hsl(var(--card));
+  border-radius: var(--rad);
+  padding: 1.5rem;
+}
+
+.live-badge-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: hsl(var(--destructive));
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.live-now-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .live-now-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.live-now-preview {
+  aspect-ratio: 16/9;
+  border-radius: var(--rad);
+  overflow: hidden;
+  background: hsl(var(--secondary));
+}
+
+.live-now-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.live-now-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.live-now-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.live-now-desc {
+  color: hsl(var(--muted-foreground));
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.live-now-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.live-now-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.live-now-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
