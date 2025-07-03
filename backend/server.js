@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import axios from 'axios';
+import https from 'https'; // ✅ Import https to configure agent
 
 dotenv.config();
 const app = express();
@@ -17,7 +18,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
-app.options('*', cors()); // ✅ Allow preflight for all routes
+app.options('*', cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -64,6 +65,8 @@ app.post('/api/kelpay-pay', async (req, res) => {
   }
 
   try {
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false }); // ✅ SSL bypass agent
+
     const response = await axios.post(
       process.env.KELPAY_URL,
       {
@@ -80,6 +83,7 @@ app.post('/api/kelpay-pay', async (req, res) => {
           Authorization: `Bearer ${process.env.KELPAY_TOKEN}`,
           "Content-Type": "application/json",
         },
+        httpsAgent // ✅ Use the custom agent
       }
     );
 
