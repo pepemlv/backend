@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 4000;
 
 // ✅ CORS: allow your domain + handle preflight
 app.use(cors({
-  origin: 'https://pmsstreaming.com',
+  origin: 'https://testpms.com',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

@@ -20,7 +20,11 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import { useAuthStore } from './store/authStore';
 
 // ✅ Load your Stripe publishable key
-const stripePromise = loadStripe('pk_live_51RfKf3AGJ9VOvdss54yJ571gHjYqx6PD2E7TyQCfwsBWcY7JFaRlif9cddDMFg6kubKygzWkWxFKPUwCqHWYEieB00TfkqnrUX'); // <-- replace this with your key
+const stripePromise = loadStripe(
+  'pk_live_51RfKf3AGJ9VOvdss54yJ571gHjYqx6PD2E7TyQCfwsBWcY7JFaRlif9cddDMFg6kubKygzWkWxFKPUwCqHWYEieB00TfkqnrUX',
+  { advancedFraudSignals: false }
+);
+
 
 function App() {
   const { checkAuth } = useAuthStore();

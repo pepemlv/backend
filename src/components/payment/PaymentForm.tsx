@@ -71,7 +71,7 @@ export default function PaymentForm({ movie, onSubmit }: PaymentFormProps) {
 
         const poll = setInterval(async () => {
           try {
-          const statusRes = await axios.get(`https://pms-backend-m1qi.onrender.com/api/kelpay-status/${reference}`);
+            const statusRes = await axios.get(`https://pms-backend-m1qi.onrender.com/api/kelpay-status/${reference}`);
 
             const statusData = statusRes.data;
 
@@ -129,7 +129,7 @@ export default function PaymentForm({ movie, onSubmit }: PaymentFormProps) {
         if (stripeError) throw new Error(stripeError.message);
         const { id } = paymentMethod;
 
-      const response = await axios.post('https://pms-backend-m1qi.onrender.com/payment', {
+        const response = await axios.post('https://pms-backend-m1qi.onrender.com/payment', {
 
           amount: movie.price * 100,
           id,
@@ -257,12 +257,31 @@ export default function PaymentForm({ movie, onSubmit }: PaymentFormProps) {
               />
             </div>
             <div className="mb-4 border p-3 rounded">
-              <CardElement options={{ style: { base: { fontSize: '16px' } } }} />
+              <CardElement
+                options={{
+                  style: {
+                    base: {
+                      fontSize: '16px',
+                      color: '#ffffff', // Correct white color
+                      '::placeholder': {
+                        color: '#cccccc', // Optional: style placeholder text
+                      },
+                    },
+                    invalid: {
+                      color: '#ff4d4f', // Optional: color when input is invalid
+                    },
+                  }
+                }}
+              />
             </div>
           </>
         )}
 
-        <button type="submit" className="btn btn-primary w-full" disabled={isSubmitting}>
+       <button
+  type="submit"
+  className="w-full py-3 text-base bg-green-600 text-white rounded hover:bg-green-700 transition duration-200"
+  disabled={isSubmitting}
+>
           {isSubmitting ? 'Traitement en cours...' : `Payer ${formatCurrency(movie.price)}`}
         </button>
       </form>
