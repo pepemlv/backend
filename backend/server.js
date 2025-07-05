@@ -6,14 +6,24 @@ import bodyParser from 'body-parser';
 import axios from 'axios';
 import https from 'https';
 
+// Import Mux SDK
+import Mux from '@mux/mux-node';
+
 dotenv.config();
+
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_TEST);
 const PORT = process.env.PORT || 4000;
 
-// ✅ Middleware
+// Init Mux client
+const { Video } = new Mux({
+  accessToken: process.env.MUX_ACCESS_TOKEN,
+  secret: process.env.MUX_SECRET_KEY,
+});
+
+// Middleware
 app.use(cors({
-  origin: 'https://pmsstreaming.com',
+  origin: ['https://pmsstreaming.com', 'http://localhost:3000'], // Autoriser les deux domaines
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -23,15 +33,16 @@ app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ✅ In-memory payment status store (replace with DB for production)
+// --- In-memory stores (à remplacer par base de données) ---
 const paymentStatus = {};
+const liveStreams = {}; // Stockage des lives créés
 
-// --- 🔍 Health check ---
+// --- Health check ---
 app.get('/', (req, res) => {
   res.send('✅ Backend is running');
 });
 
-// --- 💳 Stripe Payment ---
+// --- Stripe Payment ---
 app.post('/payment', async (req, res) => {
   const { amount, id } = req.body;
 
@@ -55,7 +66,7 @@ app.post('/payment', async (req, res) => {
   }
 });
 
-// --- 📲 Kelpay: Initiate Payment ---
+// --- Kelpay initiate payment ---
 app.post('/api/kelpay-pay', async (req, res) => {
   const { mobilenumber, amount } = req.body;
   const reference = 'REF' + Date.now();
@@ -114,7 +125,7 @@ app.post('/api/kelpay-pay', async (req, res) => {
   }
 });
 
-// --- 📥 Kelpay Callback Webhook ---
+// --- Kelpay Callback Webhook ---
 app.post('/kelpay-callback', (req, res) => {
   const result = req.body;
   console.log('📡 Kelpay callback received:', result);
@@ -139,7 +150,7 @@ app.post('/kelpay-callback', (req, res) => {
   res.status(200).send('OK');
 });
 
-// --- 📊 Check Kelpay Status ---
+// --- Check Kelpay Status ---
 app.get('/api/kelpay-status/:reference', (req, res) => {
   const reference = req.params.reference;
   const result = paymentStatus[reference];
@@ -151,7 +162,41 @@ app.get('/api/kelpay-status/:reference', (req, res) => {
   }
 });
 
-// --- 🚀 Start Server ---
+// --- Mux Live Stream Creation ---
+app.post('/api/mux/create-live', async (req, res) => {
+  try {
+    const { title } = req.body;
+    if (!title) {
+      return res.status(400).json({ error: 'Missing live stream title' });
+    }
+
+    // Crée un live stream sur Mux
+    const liveStream = await Video.LiveStreams.create({
+      playback_policy: 'public',
+      new_asset_settings: { playback_policy: 'public' },
+      reconnect_window: 60,
+    });
+
+    // Stockage en mémoire (à remplacer par base de données)
+    liveStreams[liveStream.id] = {
+      id: liveStream.id,
+      title,
+      playbackId: liveStream.playback_ids[0].id,
+      streamKey: liveStream.stream_key,
+      status: 'created',
+      createdAt: new Date(),
+    };
+
+    res.status(201).json({
+      message: 'Live stream created',
+      liveStream: liveStreams[liveStream.id],
+    });
+  } catch (error) {
+    console.error('❌ Mux live creation error:', error);
+    res.status(500).json({ error: 'Failed to create live stream' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
