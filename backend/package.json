@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@mux/mux-node": "^12.1.0",
     "axios": "^1.10.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
