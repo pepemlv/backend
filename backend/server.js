@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 4000;
 
 // Init Mux client
 const { Video } = new Mux({
-  accessToken: process.env.MUX_ACCESS_TOKEN,
-  secret: process.env.MUX_SECRET_KEY,
+  tokenId: process.env.MUX_ACCESS_TOKEN,
+  tokenSecret: process.env.MUX_SECRET_KEY,
 });
 
 // Middleware
