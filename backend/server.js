@@ -5,8 +5,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import axios from 'axios';
 import https from 'https';
-
-// Import Mux SDK
 import Mux from '@mux/mux-node';
 
 dotenv.config();
@@ -23,7 +21,7 @@ const { Video } = new Mux({
 
 // Middleware
 app.use(cors({
-  origin: ['https://pmsstreaming.com', 'http://localhost:3000'], // Autoriser les deux domaines
+  origin: ['https://pmsstreaming.com', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -33,9 +31,9 @@ app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// --- In-memory stores (à remplacer par base de données) ---
+// In-memory stores
 const paymentStatus = {};
-const liveStreams = {}; // Stockage des lives créés
+const liveStreams = {};
 
 // --- Health check ---
 app.get('/', (req, res) => {
@@ -44,29 +42,32 @@ app.get('/', (req, res) => {
 
 // --- Stripe Payment ---
 app.post('/payment', async (req, res) => {
-  const { amount, id } = req.body;
+  const { amount, id, title } = req.body;
+  console.log('🔔 Incoming Stripe Payment:', req.body);
 
   if (!amount || !id) {
-    return res.status(400).json({ success: false, message: 'Missing required fields' });
+    console.error('❌ Missing required fields: amount or id');
+    return res.status(400).json({ success: false, message: 'Missing required fields (amount, id)' });
   }
 
   try {
-    await stripe.paymentIntents.create({
+    const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: 'USD',
-      description: 'Movie purchased via card',
+      description: title || 'Movie ticket',
       payment_method: id,
       confirm: true,
     });
 
+    console.log('✅ Stripe Payment Successful:', paymentIntent.id);
     res.status(200).json({ success: true, message: 'Payment successful' });
   } catch (error) {
     console.error('❌ Stripe error:', error.message);
-    res.status(500).json({ success: false, message: 'Payment failed' });
+    res.status(500).json({ success: false, message: 'Stripe payment failed', error: error.message });
   }
 });
 
-// --- Kelpay initiate payment ---
+// --- Kelpay Payment Initiation ---
 app.post('/api/kelpay-pay', async (req, res) => {
   const { mobilenumber, amount } = req.body;
   const reference = 'REF' + Date.now();
@@ -125,7 +126,7 @@ app.post('/api/kelpay-pay', async (req, res) => {
   }
 });
 
-// --- Kelpay Callback Webhook ---
+// --- Kelpay Callback ---
 app.post('/kelpay-callback', (req, res) => {
   const result = req.body;
   console.log('📡 Kelpay callback received:', result);
@@ -150,7 +151,7 @@ app.post('/kelpay-callback', (req, res) => {
   res.status(200).send('OK');
 });
 
-// --- Check Kelpay Status ---
+// --- Kelpay Status Check ---
 app.get('/api/kelpay-status/:reference', (req, res) => {
   const reference = req.params.reference;
   const result = paymentStatus[reference];
@@ -170,14 +171,12 @@ app.post('/api/mux/create-live', async (req, res) => {
       return res.status(400).json({ error: 'Missing live stream title' });
     }
 
-    // Crée un live stream sur Mux
     const liveStream = await Video.LiveStreams.create({
       playback_policy: 'public',
       new_asset_settings: { playback_policy: 'public' },
       reconnect_window: 60,
     });
 
-    // Stockage en mémoire (à remplacer par base de données)
     liveStreams[liveStream.id] = {
       id: liveStream.id,
       title,
